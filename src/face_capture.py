@@ -18,3 +18,10 @@ def parse_name(name):
     name = re.sub(r"[^\w\s]", '', name) # Remove todos os caracteres não alfanuméricos (exceto números e letras)
     name = re.sub(r"\s+", '_', name)    # Substitui todos os espaços por um único sublinhado
     return name
+
+# Cria a pasta final onde as fotos serão salvas (se o caminho ainda não existir)
+def create_folders(final_path, final_path_full):
+    if not os.path.exists(final_path):
+        os.makedirs(final_path)
+    if not os.path.exists(final_path_full):
+        os.makedirs(final_path_full)
