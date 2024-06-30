@@ -51,3 +51,24 @@ def detect_face_ssd(network, orig_frame, show_conf=True, conf_min=0.7):
                 text_conf = "{:.2f}%".format(confidence * 100)
                 cv2.putText(frame, text_conf, (start_x, start_y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
     return face_roi, frame
+
+network = cv2.dnn.readNetFromCaffe("deploy.prototxt.txt", "res10_300x300_ssd_iter_140000.caffemodel")
+
+# Objeto de captura de vídeo
+cam = cv2.VideoCapture(0)
+
+folder_faces = "dataset/"      # Onde os rostos recortados serão armazenados
+folder_full = "dataset_full/"  # Onde serão armazenadas as fotos completas
+
+# O usuário precisa digitar seu nome, para que os rostos sejam salvos na subpasta adequada
+# Poderíamos pedir para digitar um número de ID também (que o rosto será associado com)
+person_name = input('Digite seu nome: ')
+person_name = parse_name(person_name)
+
+# Junta o caminho (diretório do dataset + subpasta)
+final_path = os.path.sep.join([folder_faces, person_name])
+final_path_full = os.path.sep.join([folder_full, person_name])
+print("Todas as fotos serão salvas em {}".format(final_path))
+
+# Você poderia criar manualmente as pastas ou executar a função/código abaixo (ele verificará se existe. Se não, então criará a pasta)
+create_folders(final_path, final_path_full)
