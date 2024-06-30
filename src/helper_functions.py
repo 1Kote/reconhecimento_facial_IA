@@ -2,18 +2,18 @@ import cv2
 import numpy as np
 
 def resize_video(width, height, max_width=600):
-  # max_width = em pixels. define a largura máxima do vídeo processado.
-  # a altura será proporcional (definida nos cálculos abaixo)
+    # Define a largura máxima do vídeo processado. Se a largura original for maior, redimensiona proporcionalmente.
+    
+    if (width > max_width):
+        # Calcula a proporção original do vídeo:
+        proporcao = width / height
+        # Define a nova largura do vídeo como a largura máxima:
+        video_width = max_width
+        # Calcula a nova altura do vídeo mantendo a proporção original:
+        video_height = int(video_width / proporcao)
+    else:
+        # Mantém a largura e altura originais.
+        video_width = width
+        video_height = height
 
-  # se resize=True o vídeo salvo terá seu tamanho reduzido SOMENTE SE sua largura for maior que max_width
-  if (width > max_width):
-    # precisamos fazer a largura e a altura proporcionais (para manter a proporção do vídeo original) para que a imagem não pareça esticada
-    proporcao = width / height
-    # para isso, precisamos calcular a proporção (largura/altura) e usaremos esse valor para calcular a nova altura
-    video_width = max_width
-    video_height = int(video_width / proporcao)
-  else:
-    video_width = width
-    video_height = height
-
-  return video_width, video_height
+    return video_width, video_height
