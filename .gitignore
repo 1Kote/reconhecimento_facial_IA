@@ -1,3 +1,5 @@
 .venv
 .env
 .DS_Store
+src/dataset/
+src/__pycache__/

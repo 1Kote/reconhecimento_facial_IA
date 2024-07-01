@@ -55,7 +55,7 @@ def detect_face_ssd(network, orig_frame, show_conf=True, conf_min=0.7):
     return face_roi, frame  # Retorna a região do rosto e o quadro com a detecção
 
 # Carrega a rede neural pré-treinada SSD a partir dos arquivos de configuração e pesos
-network = cv2.dnn.readNetFromCaffe("deploy.prototxt.txt", "res10_300x300_ssd_iter_140000.caffemodel")
+network = cv2.dnn.readNetFromCaffe("ia_models/deploy.prototxt.txt", "ia_models/res10_300x300_ssd_iter_140000.caffemodel")
 
 # Inicializa a captura de vídeo a partir da webcam (índice 0)
 cam = cv2.VideoCapture(0)
