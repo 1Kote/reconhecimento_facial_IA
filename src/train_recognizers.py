@@ -35,3 +35,26 @@ def get_image_data(path_train):
             id += 1
 
     return np.array(ids), faces, face_names
+
+# Obtém os dados das imagens de treinamento
+ids, faces, face_names = get_image_data(training_path)
+
+# Exibe os IDs e a quantidade de faces carregadas
+print(ids)
+print(len(faces))
+
+# Exibe os nomes e IDs correspondentes
+print(face_names)
+for n in face_names:
+    print(str(n) + " => ID " + str(face_names[n]))
+
+# Armazena os nomes e IDs em um arquivo pickle
+with open("face_names.pickle", "wb") as f:
+    pickle.dump(face_names, f)
+
+print('\n')
+print('Training Eigenface recognizer...')
+eigen_classifier = cv2.face.EigenFaceRecognizer_create()
+eigen_classifier.train(faces, ids)
+eigen_classifier.write('eigen_classifier.yml')
+print('... Completed!\n')
