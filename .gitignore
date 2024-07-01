@@ -2,4 +2,5 @@
 .env
 .DS_Store
 src/dataset/
+src/dataset_full/
 src/__pycache__/
