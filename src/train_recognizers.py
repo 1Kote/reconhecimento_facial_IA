@@ -15,7 +15,7 @@ def get_image_data(path_train):
     face_names = {}
     id = 1  # ID inicial para as faces
 
-    print("Loading faces from training set...")
+    print("Carregando faces do conjunto de treinamento...")
     for subdir in subdirs:
         name = os.path.split(subdir)[1]  # Nome da pessoa (diretório)
         images_list = [os.path.join(subdir, f) for f in os.listdir(subdir) if not f.startswith(".")]
@@ -53,8 +53,8 @@ with open("face_names.pickle", "wb") as f:
     pickle.dump(face_names, f)
 
 print('\n')
-print('Training Eigenface recognizer...')
+print('Treinando o reconhecedor Eigenface...')
 eigen_classifier = cv2.face.EigenFaceRecognizer_create()
 eigen_classifier.train(faces, ids)
 eigen_classifier.write('eigen_classifier.yml')
-print('... Completed!\n')
+print("Concluído!\n")

@@ -12,7 +12,7 @@ import face_recognition
 training_path = 'dataset/' 
 
 # Nome do arquivo pickle onde serão salvas as codificações
-pickle_filename = "pickles/face_encodings_custom.pickle"  
+pickle_filename = "encodings/face_encodings_custom.pickle"  
 
 def load_encodings(path_dataset):
   list_encodings = []

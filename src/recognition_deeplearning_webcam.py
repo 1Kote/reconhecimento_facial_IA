@@ -5,7 +5,7 @@ import face_recognition
 from helper_functions import resize_video
 
 # Nome do arquivo pickle onde as codificações faciais estão armazenadas
-pickle_name = "face_encodings_custom.pickle"
+pickle_name = "encodings/face_encodings_custom.pickle"
 
 max_width = 800
 
