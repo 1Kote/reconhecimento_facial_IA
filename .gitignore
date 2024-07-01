@@ -1,6 +1,7 @@
 .venv
 .env
 .DS_Store
+src/pickles/
 src/dataset/
 src/dataset_full/
 src/__pycache__/
