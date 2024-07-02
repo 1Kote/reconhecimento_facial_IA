@@ -6,6 +6,7 @@ import csv
 from datetime import datetime, timedelta
 from helper_functions import resize_video
 import os
+import time
 
 # Nome do arquivo pickle onde as codificações faciais estão armazenadas
 pickle_name = "encodings/face_encodings_custom.pickle"
@@ -20,6 +21,16 @@ min_presence_percentage = 0.8  # Porcentagem mínima de presença (80%)
 data_encoding = pickle.loads(open(pickle_name, "rb").read())
 list_encodings = data_encoding["encodings"]
 list_names = data_encoding["names"]
+
+# Métricas
+total_frames = 0
+faces_detected = 0
+faces_recognized = 0
+false_positives = 0
+false_negatives = 0
+true_positives = 0
+true_negatives = 0
+processing_times = []
 
 def recognize_faces(image, list_encodings, list_names, resizing=0.25, tolerance=0.6):
     image = cv2.resize(image, (0, 0), fx=resizing, fy=resizing)
@@ -102,7 +113,9 @@ cam = cv2.VideoCapture(0)
 attendance_records = {}
 
 while(True):
+    start_time = time.time()
     ret, frame = cam.read()
+    total_frames += 1
     
     # Redimensiona o quadro se uma largura máxima for especificada
     if max_width is not None:
@@ -111,6 +124,21 @@ while(True):
     
     # Reconhece rostos no quadro atual
     face_locations, face_names, conf_values = recognize_faces(frame, list_encodings, list_names, 0.25)
+    if face_locations:
+        faces_detected += 1
+    for name in face_names:
+        if name != "Not identified":
+            faces_recognized += 1
+            true_positives += 1
+        else:
+            false_negatives += 1
+
+    # contar falsos positivos e verdadeiros negativos
+    if "Not identified" in face_names and len(face_locations) > 0:
+        false_positives += 1
+    else:
+        true_negatives += 1
+
     processed_frame = show_recognition(frame, face_locations, face_names, conf_values)
     
     # Verifica se a tecla "E" ou "S" foi pressionada para registrar entrada ou saída
@@ -128,11 +156,47 @@ while(True):
                 attendance_records[name]["exit_time"] = exit_time
                 register_attendance(name, attendance_records[name]["entry_time"], exit_time)
                 print(f"{name} registrado com horário de saída às {exit_time.strftime('%Y-%m-%d %H:%M:%S')}")
+
+    # Calcula o tempo de processamento por frame
+    end_time = time.time()
+    processing_time = end_time - start_time
+    processing_times.append(processing_time)
     
     # Exibe o quadro processado
     cv2.imshow("Recognizing faces", frame)
     if key == ord('q'):
         break
+
+# Métricas de desempenho
+total_detected = faces_detected
+total_recognized = faces_recognized
+detection_rate = faces_detected / total_frames if total_frames > 0 else 0
+recognition_rate = faces_recognized / faces_detected if faces_detected > 0 else 0
+average_processing_time = sum(processing_times) / len(processing_times) if processing_times else 0
+precision = true_positives / (true_positives + false_positives) if true_positives + false_positives > 0 else 0
+recall = true_positives / (true_positives + false_negatives) if true_positives + false_negatives > 0 else 0
+f1_score = 2 * (precision * recall) / (precision + recall) if precision + recall > 0 else 0
+false_positive_rate = false_positives / (false_positives + true_negatives) if false_positives + true_negatives > 0 else 0
+false_negative_rate = false_negatives / (true_positives + false_negatives) if true_positives + false_negatives > 0 else 0
+
+metrics_content = f"""
+Métricas do Sistema de Reconhecimento Facial
+
+1. Total de frames processados: {total_frames}
+2. Total de faces detectadas: {total_detected}
+3. Total de faces reconhecidas: {total_recognized}
+4. Taxa de detecção de faces: {detection_rate:.2f}
+5. Taxa de reconhecimento de faces: {recognition_rate:.2f}
+6. Tempo médio de processamento por frame: {average_processing_time:.4f} segundos
+7. Precisão (Precision): {precision:.2f}
+8. Recall: {recall:.2f}
+9. F1 Score: {f1_score:.2f}
+10. Taxa de Falsos Positivos (FPR): {false_positive_rate:.2f}
+11. Taxa de Falsos Negativos (FNR): {false_negative_rate:.2f}
+"""
+
+with open("metrics/ml_metrics.txt", "w") as f:
+    f.write(metrics_content)
 
 print("Encerrado.")
 cam.release()
