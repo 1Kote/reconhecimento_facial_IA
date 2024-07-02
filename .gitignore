@@ -2,6 +2,7 @@
 .env
 .DS_Store
 src/encodings/
+src/records/
 src/dataset/
 src/dataset_full/
 src/__pycache__/

@@ -15,7 +15,8 @@
 
 - Atualize pip, setuptools e wheel: pip install --upgrade pip setuptools wheel
 
-
-
-
-- brew install tesseract
+## Como utilizar:
+1. Utilize o face_capture para tirar fotos do seu rosto.
+2. Utilize o encoding_faces para realizar o encoding.
+3. Utilize o train_recignizers para ajustar o modelo.
+4. Utilize o recognition_deeplearning_webcam para realizar o reconhecimento e registro de presença.
