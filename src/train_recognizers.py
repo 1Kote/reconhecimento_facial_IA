@@ -49,12 +49,12 @@ for n in face_names:
     print(str(n) + " => ID " + str(face_names[n]))
 
 # Armazena os nomes e IDs em um arquivo pickle
-with open("face_names.pickle", "wb") as f:
+with open("encodings/face_names.pickle", "wb") as f:
     pickle.dump(face_names, f)
 
 print('\n')
 print('Treinando o reconhecedor Eigenface...')
 eigen_classifier = cv2.face.EigenFaceRecognizer_create()
 eigen_classifier.train(faces, ids)
-eigen_classifier.write('eigen_classifier.yml')
+eigen_classifier.write('ia_models/eigen_classifier.yml')
 print("Concluído!\n")
